@@ -10,10 +10,10 @@ namespace ChatTool.Application.Services
     using System.Threading.Tasks;
     using ChatTool.Application.Commands;
     using ChatTool.Application.Common;
+    using ChatTool.Application.DTOs;
     using ChatTool.Application.Interfaces;
     using ChatTool.Application.Queries;
     using ChatTool.Application.Results;
-    using ChatTool.Domain.DTOs;
 
     /// <summary>
     /// .
@@ -31,32 +31,27 @@ namespace ChatTool.Application.Services
             this.userRepository = userRepository;
         }
 
-        /// <inheritdoc/>
-        public Task<IEnumerable<UserDto>> ListUsersAsync(UserQueryParameters parameters, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<UserDto?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
         public Task<IResult<UserDto>> CreateUserAsync(CreateUserCommand command, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
-        public Task<IResult<UserDto>> UpdateUserAsync(UpdateUserCommand command, CancellationToken cancellationToken = default)
+        public Task<IResult<Empty>> DeleteUserAsync(DeleteUserCommand command, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
-        public Task<IResult<Empty>> DeleteUserAsync(DeleteUserCommand command, CancellationToken cancellationToken = default)
+        public Task<UserDto?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<UserDto>> ListAllUsersAsync(UserQueryParameters parameters, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IResult<UserDto>> UpdateUserAsync(UpdateUserCommand command, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

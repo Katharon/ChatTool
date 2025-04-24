@@ -4,9 +4,13 @@
 
 namespace ChatTool.Application.Interfaces
 {
+    using System;
     using System.Collections.Generic;
-    using ChatTool.Domain;
-    using ChatTool.Domain.DTOs;
+    using ChatTool.Application.Commands;
+    using ChatTool.Application.Common;
+    using ChatTool.Application.DTOs;
+    using ChatTool.Application.Queries;
+    using ChatTool.Application.Results;
 
     /// <summary>
     /// .
@@ -16,36 +20,41 @@ namespace ChatTool.Application.Interfaces
         /// <summary>
         /// .
         /// </summary>
-        /// <returns>..</returns>
-        IEnumerable<UserDto> GetAll();
+        /// <param name="parameters">..</param>
+        /// <param name="cancellationToken">...</param>
+        /// <returns>....</returns>
+        Task<IEnumerable<UserDto>> ListAllUsersAsync(UserQueryParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// .
         /// </summary>
         /// <param name="id">..</param>
-        /// <returns>...</returns>
-        UserDto Get(int id);
-
-        /// <summary>
-        /// .
-        /// </summary>
-        /// <param name="user">..</param>
-        /// <returns>...</returns>
-        UserDto Create(UserDto user);
-
-        /// <summary>
-        /// .
-        /// </summary>
-        /// <param name="oldUser">..</param>
-        /// <param name="updatedUser">...</param>
+        /// <param name="cancellationToken">...</param>
         /// <returns>....</returns>
-        UserDto Update(UserDto oldUser, UserDto updatedUser);
+        Task<UserDto?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// .
         /// </summary>
-        /// <param name="user">..</param>
-        /// <returns>...</returns>
-        bool Delete(UserDto user);
+        /// <param name="command">..</param>
+        /// <param name="cancellationToken">...</param>
+        /// <returns>....</returns>
+        Task<IResult<UserDto>> CreateUserAsync(CreateUserCommand command, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// .
+        /// </summary>
+        /// <param name="command">..</param>
+        /// <param name="cancellationToken">...</param>
+        /// <returns>....</returns>
+        Task<IResult<UserDto>> UpdateUserAsync(UpdateUserCommand command, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// .
+        /// </summary>
+        /// <param name="command">..</param>
+        /// <param name="cancellationToken">...</param>
+        /// <returns>....</returns>
+        Task<IResult<Empty>> DeleteUserAsync(DeleteUserCommand command, CancellationToken cancellationToken = default);
     }
 }

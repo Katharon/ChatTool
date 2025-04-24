@@ -11,5 +11,9 @@ namespace ChatTool.Infrastructure.Identity
     /// </summary>
     internal sealed class ApplicationUser : IdentityUser<Guid>
     {
+        /// <summary>
+        /// Gets or sets.
+        /// </summary>
+        public string Displayname { get; set; } = string.Empty;
     }
 }

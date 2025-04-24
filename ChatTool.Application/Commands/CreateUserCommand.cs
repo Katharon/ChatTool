@@ -9,5 +9,12 @@ namespace ChatTool.Application.Interfaces
     /// </summary>
     public class CreateUserCommand
     {
+        /// <summary>
+        /// .
+        /// </summary>
+        public static CreateUserCommand Create()
+        {
+            return new CreateUserCommand();
+        }
     }
 }

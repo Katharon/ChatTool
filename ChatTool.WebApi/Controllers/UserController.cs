@@ -4,8 +4,10 @@
 
 namespace ChatTool.WebApi.Controllers
 {
+    using ChatTool.Application.Common;
+    using ChatTool.Application.DTOs;
     using ChatTool.Application.Interfaces;
-    using ChatTool.Domain.DTOs;
+    using ChatTool.Application.Results;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -15,15 +17,15 @@ namespace ChatTool.WebApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository userRepository;
+        private readonly IUserService userService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
-        /// <param name="userRepository">.</param>
-        public UserController(IUserRepository userRepository)
+        /// <param name="userService">.</param>
+        public UserController(IUserService userService)
         {
-            this.userRepository = userRepository;
+            this.userService = userService;
         }
 
         /// <summary>
@@ -31,9 +33,9 @@ namespace ChatTool.WebApi.Controllers
         /// </summary>
         /// <returns>..</returns>
         [HttpGet]
-        public IEnumerable<UserDto> GetAll()
+        public Task<IEnumerable<UserDto>> GetAll()
         {
-            return this.userRepository.GetAll();
+            return this.userService.ListAllUsersAsync(null!);
         }
 
         /// <summary>
@@ -42,9 +44,9 @@ namespace ChatTool.WebApi.Controllers
         /// <param name="id">..</param>
         /// <returns>...</returns>
         [HttpGet("{id}")]
-        public UserDto Get(int id)
+        public Task<UserDto?> Get(Guid id)
         {
-            return this.userRepository.Get(id);
+            return this.userService.GetUserByIdAsync(id);
         }
 
         /// <summary>
@@ -53,9 +55,9 @@ namespace ChatTool.WebApi.Controllers
         /// <param name="value">..</param>
         /// <returns>...</returns>
         [HttpPost]
-        public UserDto Post([FromBody] string value)
+        public Task<IResult<UserDto>> Post([FromBody] string value)
         {
-            return this.userRepository.Create();
+            return this.userService.CreateUserAsync(CreateUserCommand.Create());
         }
 
         /// <summary>
@@ -65,9 +67,9 @@ namespace ChatTool.WebApi.Controllers
         /// <param name="value">...</param>
         /// <returns>....</returns>
         [HttpPut("{id}")]
-        public UserDto Put(int id, [FromBody] string value)
+        public Task<IResult<UserDto>> Put(int id, [FromBody] string value)
         {
-            return this.userRepository.Update(new UserDto("Lukass"), new UserDto("Lukas"));
+            return this.userService.GetUserByIdAsync(null!);
         }
 
         /// <summary>
@@ -76,9 +78,9 @@ namespace ChatTool.WebApi.Controllers
         /// <param name="user">..</param>
         /// <returns>...</returns>
         [HttpDelete("{user}")]
-        public bool Delete(UserDto user)
+        public Task<IResult<Empty>> Delete(UserDto user)
         {
-            return this.userRepository.Delete(new UserDto("Lukas"));
+            return this.userService.GetUserByIdAsync(null!);
         }
     }
 }

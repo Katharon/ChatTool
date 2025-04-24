@@ -2,7 +2,7 @@
 // Copyright (c) Lukas Stumpfel. All rights reserved.
 // </copyright>
 
-namespace ChatTool.Domain.DTOs
+namespace ChatTool.Application.DTOs
 {
     /// <summary>
     /// .

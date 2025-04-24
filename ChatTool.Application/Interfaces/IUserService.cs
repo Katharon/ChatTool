@@ -5,11 +5,12 @@
 namespace ChatTool.Application.Interfaces
 {
     using System;
+    using System.Collections.Generic;
     using ChatTool.Application.Commands;
     using ChatTool.Application.Common;
+    using ChatTool.Application.DTOs;
     using ChatTool.Application.Queries;
     using ChatTool.Application.Results;
-    using ChatTool.Domain.DTOs;
 
     /// <summary>
     /// .
@@ -22,7 +23,7 @@ namespace ChatTool.Application.Interfaces
         /// <param name="parameters">..</param>
         /// <param name="cancellationToken">...</param>
         /// <returns>....</returns>
-        Task<IEnumerable<UserDto>> ListUsersAsync(UserQueryParameters parameters, CancellationToken cancellationToken = default);
+        Task<IEnumerable<UserDto>> ListAllUsersAsync(UserQueryParameters parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// .

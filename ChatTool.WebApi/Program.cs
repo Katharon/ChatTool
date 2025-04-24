@@ -5,6 +5,7 @@
 namespace ChatTool.WebApi
 {
     using ChatTool.Dependencies;
+    using ChatTool.Infrastructure.Mappings;
     using Scalar.AspNetCore;
 
     /// <summary>
@@ -21,9 +22,10 @@ namespace ChatTool.WebApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDependencies(builder.Configuration);
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+            builder.Services.AddDependencies(builder.Configuration);
+            builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
             var app = builder.Build();
 
