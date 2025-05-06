@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="ChatTool.Application.Extensions.DependencyInjection">
+    <Position X="2" Y="5.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\DependencyInjection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatTool.Application.Messages.DTOs.SendMessageDto">
+    <Position X="10.75" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Messages\DTOs\SendMessageDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatTool.Application.Messages.Services.MessageService" BaseTypeListCollapsed="true">
+    <Position X="3" Y="1.75" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Messages\Services\MessageService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="ChatTool.Application.Messages.Interfaces.IMessageRepository">
+    <Position X="10" Y="6.75" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Messages\Interfaces\IMessageRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatTool.Application.Messages.Interfaces.IMessageService">
+    <Position X="10.75" Y="5" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Messages\Interfaces\IMessageService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatTool.Application.Users.Interfaces.IUserService">
+    <Position X="7.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\Interfaces\IUserService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

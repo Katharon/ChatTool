@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTool.Backend.Application", "ChatTool.Backend.Application\ChatTool.Backend.Application.csproj", "{F337E2F5-9AE6-4936-B94F-43462FD74EF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTool.Backend.Domain", "ChatTool.Backend.Domain\ChatTool.Backend.Domain.csproj", "{F4507AAB-5ECD-436B-A32F-5F31625184F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTool.Backend.WebApi", "ChatTool.Backend.WebApi\ChatTool.Backend.WebApi.csproj", "{58F22D05-28F9-408F-8F41-10B3B011BB62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTool.Backend.Infrastructure", "ChatTool.Backend.Infrastructure\ChatTool.Backend.Infrastructure.csproj", "{F9D2D92A-9809-475D-88DE-AF2D3FD4D382}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTool.Backend.Persistence", "ChatTool.Backend.Persistence\ChatTool.Backend.Persistence.csproj", "{FEEEE3DB-D21B-46AA-8F31-1A220266544F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTool.Backend.Tests", "ChatTool.Backend.Tests\ChatTool.Backend.Tests.csproj", "{065A283F-4685-4449-9894-DA7FFF7A7C43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F337E2F5-9AE6-4936-B94F-43462FD74EF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F337E2F5-9AE6-4936-B94F-43462FD74EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F337E2F5-9AE6-4936-B94F-43462FD74EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F337E2F5-9AE6-4936-B94F-43462FD74EF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4507AAB-5ECD-436B-A32F-5F31625184F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4507AAB-5ECD-436B-A32F-5F31625184F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4507AAB-5ECD-436B-A32F-5F31625184F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4507AAB-5ECD-436B-A32F-5F31625184F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F22D05-28F9-408F-8F41-10B3B011BB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F22D05-28F9-408F-8F41-10B3B011BB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F22D05-28F9-408F-8F41-10B3B011BB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F22D05-28F9-408F-8F41-10B3B011BB62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9D2D92A-9809-475D-88DE-AF2D3FD4D382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9D2D92A-9809-475D-88DE-AF2D3FD4D382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9D2D92A-9809-475D-88DE-AF2D3FD4D382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9D2D92A-9809-475D-88DE-AF2D3FD4D382}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEEEE3DB-D21B-46AA-8F31-1A220266544F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEEEE3DB-D21B-46AA-8F31-1A220266544F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEEEE3DB-D21B-46AA-8F31-1A220266544F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEEEE3DB-D21B-46AA-8F31-1A220266544F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{065A283F-4685-4449-9894-DA7FFF7A7C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{065A283F-4685-4449-9894-DA7FFF7A7C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{065A283F-4685-4449-9894-DA7FFF7A7C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{065A283F-4685-4449-9894-DA7FFF7A7C43}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D070EF4F-1194-4CB9-8130-10F81BE67CA8}
+	EndGlobalSection
+EndGlobal
