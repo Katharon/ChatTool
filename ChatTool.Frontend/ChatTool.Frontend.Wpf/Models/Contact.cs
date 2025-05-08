@@ -1,9 +1,11 @@
 ﻿namespace ChatTool.Frontend.Wpf.Models
 {
     using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Windows.Media;
 
-    class Contact
+    public class Contact : INotifyPropertyChanged
     {
         public Contact(Guid id, string userName, string lastMessage, ImageSource profileImage, DateTime lastSeenTimestamp, DateTime lastMessageTimestamp)
         {
@@ -17,10 +19,38 @@
 
         public Guid Id { get; }
         public string UserName { get; }
-        public string LastMessage { get; }
+        public string LastMessage
+        {
+            get => field;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                field = value;
+                this.OnPropertyChanged(nameof(LastMessage));
+            }
+        }
         public ImageSource ProfileImage { get; }
         public DateTime LastSeenTimestamp { get; }
-        public DateTime LastMessageTimestamp { get; }
-        public List<ReceiveMessageDto> Messages { get; } = [];
+        public DateTime LastMessageTimestamp
+        {
+            get => field;
+            set
+            {
+                field = value;
+                this.OnPropertyChanged(nameof(LastMessageTimestamp));
+            }
+        }
+        public ObservableCollection<ReceiveMessageDto> Messages { get; } = [];
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

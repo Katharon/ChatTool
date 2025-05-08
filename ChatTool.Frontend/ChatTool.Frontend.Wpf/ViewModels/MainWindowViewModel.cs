@@ -4,15 +4,15 @@
     using ChatTool.Frontend.Wpf.Models;
     using System;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Text;
-    using System.Text.Unicode;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media.Imaging;
 
-    class MainWindowViewModel
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
         private readonly HttpClient httpClient = new()
         {
@@ -22,18 +22,23 @@
         public MainWindowViewModel()
         {
             this.LoadUsers();
+            this.LoadMessages();
 
             Task.Run(() =>
             {
-                this.LoadMessages();
+                this.LoadMessagesForChat();
             });
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public event EventHandler? MessageReceived;
 
         public Guid SelfId { get; set; }
 
         public string MessageText { get; set; } = string.Empty;
 
-        public ObservableCollection<Contact> Contacts { get; set; } = new ();
+        public ObservableCollection<Contact> Contacts { get; set; } = [];
 
         public Contact? SelectedContact { get; set; }
 
@@ -42,13 +47,13 @@
             get
             {
                 return new ParametrizedCommand<Contact>(
-                    execute: contact => SendMessage(contact),
+                    execute: contact => SendMessage(),
                     canExecute: contact => contact != null
                 );
             }
         }
 
-        private async void LoadUsers()
+        public async void LoadUsers()
         {
             var response = await this.httpClient.GetAsync("/api/User/GetAllUsers");
             if (response.IsSuccessStatusCode)
@@ -76,13 +81,43 @@
             }
         }
 
-        private async void LoadMessages()
+        public async void LoadMessages()
+        {
+            foreach (Contact contact in this.Contacts)
+            {
+                var requestBody = new HistoryRequestDto(this.SelfId, contact.Id);
+
+                var response = await this.httpClient.PostAsJsonAsync("/api/Message/GetMessages", requestBody);
+                if (response.IsSuccessStatusCode)
+                {
+                    var messages = await response.Content.ReadFromJsonAsync<List<ReceiveMessageDto>>();
+                    if (messages != null)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            contact.Messages.Clear();
+                            foreach (var message in messages)
+                            {
+                                contact.Messages.Add(message);
+                                contact.LastMessage = Encoding.UTF8.GetString(contact.Messages[^1].Content);
+                                contact.LastMessageTimestamp = contact.Messages[^1].Timestamp;
+                            }
+                        });
+
+                        this.OnPropertyChanged(nameof(contact));
+                        this.MessageReceived?.Invoke(this, EventArgs.Empty);
+                    }
+                }
+            }
+        }
+
+        public async void LoadMessagesForChat()
         {
             while (true)
             {
-                foreach (Contact contact in this.Contacts)
+                if (this.SelectedContact is not null)
                 {
-                    var requestBody = new HistoryRequestDto(this.SelfId, contact.Id);
+                    var requestBody = new HistoryRequestDto(this.SelfId, this.SelectedContact.Id);
 
                     var response = await this.httpClient.PostAsJsonAsync("/api/Message/GetMessages", requestBody);
                     if (response.IsSuccessStatusCode)
@@ -90,43 +125,60 @@
                         var messages = await response.Content.ReadFromJsonAsync<List<ReceiveMessageDto>>();
                         if (messages != null)
                         {
-                            contact.Messages.Clear();
-                            foreach (var message in messages)
+                            Application.Current.Dispatcher.Invoke(() =>
                             {
-                                contact.Messages.Add(message);
-                            }
+                                var existingMessages = this.SelectedContact.Messages;
+
+                                foreach (var message in messages)
+                                {
+                                    bool exists = existingMessages.Any(m => m.Id == message.Id);
+                                    if (!exists)
+                                    {
+                                        existingMessages.Add(message);
+                                        this.SelectedContact.LastMessage = Encoding.UTF8.GetString(message.Content);
+                                        this.SelectedContact.LastMessageTimestamp = message.Timestamp;
+                                        this.MessageReceived?.Invoke(this, EventArgs.Empty);
+                                    }
+                                }
+                            });
+
+                            this.OnPropertyChanged(nameof(this.SelectedContact));
                         }
                     }
-                    else
-                    {
-                        MessageBox.Show($"Fehler: {response.StatusCode}");
-                    }
-                }
 
-                Thread.Sleep(500);
+                    await Task.Delay(500);
+                }
             }
         }
 
-        public async void SendMessage(Contact contact)
+        public async void SendMessage()
         {
             string messageText = this.MessageText;
+            this.MessageText = string.Empty;
+
             if (string.IsNullOrWhiteSpace(messageText))
             {
                 return;
             }
 
+            if (this.SelectedContact == null)
+            {
+                return;
+            }
+
             byte[] messageData = Encoding.UTF8.GetBytes(messageText);
-            var sendMessageDto = new SendMessageDto(messageData, MessageType.Text, this.SelfId, contact.Id);
+            var sendMessageDto = new SendMessageDto(messageData, MessageType.Text, this.SelfId, this.SelectedContact.Id);
 
             var response = await this.httpClient.PostAsJsonAsync("/api/Message/SendMessage", sendMessageDto);
-            if (response.IsSuccessStatusCode)
-            {
-                //MessageBox.Show("Geschafft.");
-            }
-            else
+            if (!response.IsSuccessStatusCode)
             {
                 MessageBox.Show($"Fehler: {response.StatusCode}");
             }
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

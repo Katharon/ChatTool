@@ -4,6 +4,7 @@
     using System.Net.Http;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
 
@@ -17,13 +18,36 @@
         private double animationCurrentOffset;
         private bool isRenderingSubscribed = false;
         private const double wheelFactor = 0.50;
+        private readonly MainWindowViewModel viewModel;
 
         public MainWindow(Guid selfId)
         {
             this.InitializeComponent();
-            var viewModel = new MainWindowViewModel();
-            viewModel.SelfId = selfId;
+            this.viewModel = new MainWindowViewModel();
+            this.viewModel.SelfId = selfId;
             this.DataContext = viewModel;
+            this.viewModel.MessageReceived += ScrollChatToBottom;
+        }
+
+        private void ScrollChatToBottom(object? sender, EventArgs e)
+        {
+            if (MessageListBox.Items.Count > 0)
+            {
+                MessageListBox.ScrollIntoView(MessageListBox.Items[MessageListBox.Items.Count - 1]);
+            }
+        }
+
+        private void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // Erzwinge Binding-Aktualisierung
+                var textBox = (TextBox)sender;
+                var binding = BindingOperations.GetBindingExpression(textBox, TextBox.TextProperty);
+                binding?.UpdateSource();
+
+                this.viewModel.SendMessage();
+            }
         }
 
         private void ChatList_Loaded(object sender, RoutedEventArgs e)

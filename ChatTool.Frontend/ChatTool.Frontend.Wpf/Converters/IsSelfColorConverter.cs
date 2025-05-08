@@ -4,25 +4,23 @@
     using System.Globalization;
     using System.Windows.Data;
     using System.Windows.Media;
-    using System.Windows;
 
-    public class IsSelfColorConverter : IValueConverter
+    public class IsSelfColorConverter : IMultiValueConverter
     {
-        public Guid SelfId { get; set; }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Guid senderId)
+            if (values.Length == 2 && values[0] is Guid senderId && values[1] is Guid selfId)
             {
-                return senderId == SelfId
-                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#005c4b")) // eigene Nachricht
-                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#353535")); // fremde Nachricht
+                if (senderId == selfId)
+                {
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#005c4b"));
+                }
             }
 
-            return HorizontalAlignment.Left;
+            return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#383838"));
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

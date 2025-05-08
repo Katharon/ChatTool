@@ -5,21 +5,22 @@
     using System.Windows.Data;
     using System.Windows;
 
-    public class IsSelfAlignmentConverter : IValueConverter
+    public class IsSelfAlignmentConverter : IMultiValueConverter
     {
-        public Guid SelfId { get; set; }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Guid senderId)
+            if (values.Length == 2 && values[0] is Guid senderId && values[1] is Guid selfId)
             {
-                return senderId == SelfId ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                if (senderId == selfId)
+                {
+                    return HorizontalAlignment.Right;
+                }
             }
 
             return HorizontalAlignment.Left;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
