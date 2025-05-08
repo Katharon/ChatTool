@@ -43,7 +43,7 @@
 
             //var token = GenerateJwtToken(user);
             //return Ok(new { token });
-            return this.Ok();
+            return this.Ok(new { id = user.Id });
         }
 
         [HttpPost("register")]

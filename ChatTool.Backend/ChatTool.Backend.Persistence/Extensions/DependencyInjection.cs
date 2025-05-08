@@ -23,7 +23,7 @@
             .AddEntityFrameworkStores<MessengerDbContext>()
             .AddDefaultTokenProviders();
 
-            // services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
 
             return services;
         }

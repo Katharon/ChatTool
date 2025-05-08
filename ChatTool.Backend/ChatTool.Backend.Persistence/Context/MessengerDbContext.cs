@@ -5,10 +5,6 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     internal class MessengerDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
@@ -17,12 +13,11 @@
         {
         }
 
-        //internal DbSet<Message> Messages => Set<Message>();
+        internal DbSet<Message> Messages => Set<Message>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfigurationsFromAssembly(typeof(MessengerDbContext).Assembly);
         }
     }
 }

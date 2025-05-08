@@ -1,15 +1,13 @@
-﻿namespace ChatTool.Backend.Application.Messages.DTOs
+﻿namespace ChatTool.Frontend.Wpf.Models
 {
-    using ChatTool.Backend.Domain.Enums;
-
     public class SendMessageDto
     {
         public SendMessageDto(byte[] content, MessageType type, Guid sender, Guid receiver)
         {
-            Content = content;
-            Type = type;
-            Sender = sender;
-            Receiver = receiver;
+            this.Content = content;
+            this.Type = type;
+            this.Sender = sender;
+            this.Receiver = receiver;
         }
 
         public byte[] Content { get; }

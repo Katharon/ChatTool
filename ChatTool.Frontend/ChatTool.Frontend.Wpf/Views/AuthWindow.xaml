@@ -72,9 +72,9 @@
                         <TextBlock Text="Herzlich Willkommen" Foreground="White" />
 
                         <!-- Eingaben -->
-                        <TextBox Text="Email-Adresse" x:Name="EmailInput" />
+                        <TextBox Text="Lukas.stumpfel@live.de" x:Name="EmailInput" />
                         <TextBox Text="Username" x:Name="UsernameInput" />
-                        <TextBox Text="Passwort" x:Name="PasswordInput" />
+                        <TextBox Text="Passwort123!" x:Name="PasswordInput" />
 
                         <!-- Buttons -->
                         <StackPanel Orientation="Horizontal">

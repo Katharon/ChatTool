@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Json;
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
@@ -47,7 +48,9 @@
             var response = await this.httpClient.PostAsync("/api/Auth/login", content);
             if (response.IsSuccessStatusCode)
             {
-                new MainWindow(this.EmailInput.Text).Show();
+                var result = await response.Content.ReadFromJsonAsync<JsonElement>();
+                Guid selfId = result.GetProperty("id").GetGuid();
+                new MainWindow(selfId).Show();
                 this.Close();
             }
             else
@@ -73,7 +76,7 @@
             var response = await this.httpClient.PostAsync("/api/Auth/register", content);
             if (response.IsSuccessStatusCode)
             {
-                MessageBox.Show("disUser erfolgreich gesendet");
+                MessageBox.Show("Registrierung erfolgreich!");
             }
             else
             {

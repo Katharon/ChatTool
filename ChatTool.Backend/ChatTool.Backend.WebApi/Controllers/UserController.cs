@@ -18,22 +18,23 @@
             this.userManager = userManager;
         }
 
-        [HttpPost("getAll")]
-        public IEnumerable<UserDto> GetAllContacts()
+        [HttpGet("GetAllUsers")]
+        public IEnumerable<UserDto> GetAllUsers()
         {
-            IQueryable<ApplicationUser> dbUsers = userManager.Users;
-            List<UserDto> user = new List<UserDto>();
+            IEnumerable<ApplicationUser> dbUsers = userManager.Users.ToList();
+            List<UserDto> users = new ();
 
             foreach (ApplicationUser dbUser in dbUsers)
             {
-                user.Add(new UserDto
+                users.Add(new UserDto
                 {
-                    UserName = dbUser.UserName!,
+                    UserName = dbUser.UserName ?? throw new NullReferenceException(),
                     Id = dbUser.Id,
                 });
+
             }
 
-            return user;
+            return users;
         }
 
         [HttpGet("{id}")]

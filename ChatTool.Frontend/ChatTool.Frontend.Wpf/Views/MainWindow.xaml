@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:ChatTool.Frontend.Wpf.Views"
         xmlns:viewModels="clr-namespace:ChatTool.Frontend.Wpf.ViewModels"
+        xmlns:converters="clr-namespace:ChatTool.Frontend.Wpf.Converters"
+        xmlns:models="clr-namespace:ChatTool.Frontend.Wpf.Models"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="IT-Security Messenger" Height="720" Width="1280"
-        DataContext="{DynamicResource MainViewModel}"
+        DataContext="{DynamicResource MainWindowViewModel}"
         WindowStyle="None">
 
     <shell:WindowChrome.WindowChrome>
@@ -16,7 +18,9 @@
     </shell:WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <viewModels:MainWindowViewModel x:Key="MainViewModel" />
+        <viewModels:MainWindowViewModel x:Key="MainWindowViewModel" />
+        <converters:IsSelfAlignmentConverter x:Key="IsSelfAlignmentConverter" />
+        <converters:IsSelfColorConverter x:Key="IsSelfColorConverter" />
     </Window.Resources>
 
     <Border Background="#202020">
@@ -181,7 +185,7 @@
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
 
-                                                <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name}" FontWeight="Medium" Foreground="White" FontSize="14" VerticalAlignment="Bottom" Padding="3" />
+                                                <Label Grid.Column="0" Grid.Row="0" Content="{Binding UserName}" FontWeight="Medium" Foreground="White" FontSize="14" VerticalAlignment="Bottom" Padding="3" />
                                                 <Label Grid.Column="0" Grid.Row="1" Content="{Binding LastMessage}" Grid.ColumnSpan="2" Foreground="LightGray" FontSize="14" VerticalAlignment="Top" Padding="3" />
                                                 <Label Grid.Column="1" Grid.Row="0" Content="{Binding LastMessageTimestamp}" ContentStringFormat="HH:mm" Foreground="White" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Top" />
                                             </Grid>
@@ -218,7 +222,7 @@
                                     </Ellipse>
 
                                     <StackPanel>
-                                        <Label Content="{Binding SelectedContact.Name}" FontSize="14" FontWeight="Medium" Foreground="White" Padding="0" />
+                                        <Label Content="{Binding SelectedContact.UserName}" FontSize="14" FontWeight="Medium" Foreground="White" Padding="0" />
                                         <Label Content="{Binding SelectedContact.LastSeenTimestamp}" ContentStringFormat="Zuletzt gesehen um {0:HH:mm}" Foreground="White" Padding="0" />
                                     </StackPanel>
                                 </StackPanel>
@@ -235,9 +239,40 @@
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        
+
                         <!-- Chatfenster Nachrichten -->
-                        <Grid Grid.Row="1"></Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.Background>
+                                <ImageBrush ImageSource="pack://application:,,,/Resources/Images/Background.png"
+                                            TileMode="Tile"
+                                            Viewport="0,0,200,200"
+                                            ViewportUnits="Absolute"
+                                            Stretch="None"
+                                            Opacity="0.075" />
+                            </Grid.Background>
+                            <ListBox ItemsSource="{Binding SelectedContact.Messages}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Margin="5,15,0,0"
+                                     SelectionMode="Single"
+                                     VirtualizingPanel.IsVirtualizing="True"
+                                     VirtualizingPanel.ScrollUnit="Pixel">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="5"
+                                                Background="{Binding Sender, Converter={StaticResource IsSelfColorConverter}}"
+                                                Padding="10,5,10,5"
+                                                HorizontalAlignment="{Binding Sender, Converter={StaticResource IsSelfAlignmentConverter}}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Text}" FontSize="14" Foreground="White" Padding="0,0,0,0" VerticalAlignment="Center" />
+                                                <Label Content="{Binding Timestamp}" FontSize="10" ContentStringFormat="HH:mm" Foreground="DarkGray" VerticalAlignment="Bottom" Padding="20,0,5,0" />
+                                                <Label Content="✔️" FontSize="10" Foreground="DarkGray" VerticalAlignment="Bottom" Padding="0,0,0,1" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
 
                         <!-- Chatfenster Chatfunktion -->
                         <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="#202020">
@@ -251,8 +286,8 @@
 
                                 <Button Grid.Column="0" Content="😊" Width="40" Height="40" FontSize="14" Background="Transparent" Foreground="LightGray" Margin="10,0,0,0" BorderThickness="0" />
                                 <Button Grid.Column="1" Content="📎" Width="40" Height="40" FontSize="16" Background="Transparent" Foreground="LightGray" Margin="0" BorderThickness="0" />
-                                <TextBox Grid.Column="2" Background="Transparent" FontSize="14" Foreground="White" BorderThickness="0" Padding="5,0,0,0" VerticalAlignment="Center" Text="Nachricht eingeben" />
-                                <Button Grid.Column="3" Content="🎤" Width="40" Height="40" FontSize="14" Background="Transparent" Foreground="LightGray" Margin="0,0,10,0" BorderThickness="0" />
+                                <TextBox Grid.Column="2" Background="Transparent" FontSize="14" Foreground="White" BorderThickness="0" Padding="5,0,0,0" VerticalAlignment="Center" Text="{Binding MessageText, Mode=TwoWay}" />
+                                <Button Grid.Column="3" Content="🎤" Width="40" Height="40" FontSize="14" Background="Transparent" Foreground="LightGray" Margin="0,0,10,0" BorderThickness="0" Command="{Binding SendMessageCommand}" CommandParameter="{Binding SelectedContact}" />
                             </Grid>
                         </Border>
                     </Grid>

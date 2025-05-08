@@ -1,10 +1,12 @@
 ﻿namespace ChatTool.Backend.WebApi.Controllers
 {
+    using ChatTool.Backend.Application.Messages.DTOs;
     using ChatTool.Backend.Application.Messages.Interfaces;
     using ChatTool.Backend.Domain;
     using ChatTool.Backend.Domain.Enums;
     using ChatTool.Backend.Domain.Models;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -12,15 +14,18 @@
     {
         private readonly IMessageService messageService;
 
-        public MessageController(IMessageService messageService)
+        private readonly ILogger<MessageController> logger;
+
+        public MessageController(IMessageService messageService, ILogger<MessageController> logger)
         {
             this.messageService = messageService;
+            this.logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetHistory(Guid userA, Guid userB)
+        [HttpPost("GetMessages")]
+        public async Task<ActionResult<IEnumerable<Message>>> GetMessages([FromBody] HistoryRequestDto request)
         {
-            IEnumerable<Message> messages = await this.messageService.GetConversationAsync(userA, userB);
+            IEnumerable<Message> messages = await this.messageService.GetConversationAsync(request.UserA, request.UserB);
 
             if (!messages.Any())
             {
@@ -30,9 +35,14 @@
             return this.Ok(messages);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SendMessage(byte[] content, MessageType type, Guid sender, Guid receiver)
+        [HttpPost("SendMessage")]
+        public async Task<IActionResult> SendMessage([FromBody] SendMessageDto request)
         {
+            var content = request.Content;
+            var type = request.Type;
+            var sender = request.Sender;
+            var receiver = request.Receiver;
+
             await this.messageService.SendMessageAsync(content, type, sender, receiver);
 
             return this.Accepted();

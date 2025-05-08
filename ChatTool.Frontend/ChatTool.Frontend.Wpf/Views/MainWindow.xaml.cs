@@ -18,30 +18,12 @@
         private bool isRenderingSubscribed = false;
         private const double wheelFactor = 0.50;
 
-        private readonly HttpClient httpClient = new ()
-        {
-            BaseAddress = new Uri("https://localhost:7118/")
-        };
-
-        public MainWindow(string user)
+        public MainWindow(Guid selfId)
         {
             this.InitializeComponent();
-            this.InitializeData();
-            this.DataContext = new MainWindowViewModel();
-        }
-
-        private async void InitializeData()
-        {
-            var response = await this.httpClient.GetAsync("/api/Account");
-            if (response.IsSuccessStatusCode)
-            {
-                MessageBox.Show("Liste von Usern erfolgreich empfangen");
-                MessageBox.Show(response.Content.ToString());
-            }
-            else
-            {
-                MessageBox.Show($"Fehler: {response.StatusCode}");
-            }
+            var viewModel = new MainWindowViewModel();
+            viewModel.SelfId = selfId;
+            this.DataContext = viewModel;
         }
 
         private void ChatList_Loaded(object sender, RoutedEventArgs e)

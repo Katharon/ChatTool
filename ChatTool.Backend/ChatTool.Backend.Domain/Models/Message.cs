@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChatTool.Backend.Domain.Models
 {
-    public class Message
+    public class Message : Entity
     {
         public Message(byte[] content, MessageType messageType, Guid sender, Guid receiver, DateTime timestamp)
         {
@@ -18,14 +18,14 @@ namespace ChatTool.Backend.Domain.Models
             Timestamp = timestamp;
         }
 
-        public byte[] Content { get; }
+        public byte[] Content { get; set; }
 
-        public MessageType MessageType { get; }
+        public MessageType MessageType { get; set; }
 
-        public Guid Sender { get; }
+        public Guid Sender { get; set; }
 
-        public Guid Receiver { get; }
+        public Guid Receiver { get; set; }
 
-        public DateTime Timestamp { get; }
+        public DateTime Timestamp { get; set; }
     }
 }

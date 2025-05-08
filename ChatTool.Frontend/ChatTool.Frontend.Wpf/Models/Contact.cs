@@ -5,19 +5,22 @@
 
     class Contact
     {
-        public Contact(string name, string lastMessage, ImageSource profileImage, DateTime lastSeenTimestamp, DateTime lastMessageTimestamp)
+        public Contact(Guid id, string userName, string lastMessage, ImageSource profileImage, DateTime lastSeenTimestamp, DateTime lastMessageTimestamp)
         {
-            this.Name = name;
+            this.Id = id;
+            this.UserName = userName;
             this.LastMessage = lastMessage;
             this.ProfileImage = profileImage;
             this.LastSeenTimestamp = lastSeenTimestamp;
             this.LastMessageTimestamp = lastMessageTimestamp;
         }
 
-        public string Name { get; set; }
-        public string LastMessage { get; set; }
-        public ImageSource ProfileImage { get; set; }
-        public DateTime LastSeenTimestamp { get; set; }
-        public DateTime LastMessageTimestamp { get; set; }
+        public Guid Id { get; }
+        public string UserName { get; }
+        public string LastMessage { get; }
+        public ImageSource ProfileImage { get; }
+        public DateTime LastSeenTimestamp { get; }
+        public DateTime LastMessageTimestamp { get; }
+        public List<ReceiveMessageDto> Messages { get; } = [];
     }
 }
