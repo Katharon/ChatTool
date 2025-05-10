@@ -157,7 +157,7 @@
                                 </ListBox.Template>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Margin="10" Width="335">
+                                        <Grid Margin="10" Width="335" KeyDown="ScrollChatToBottom">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -307,7 +307,7 @@
                                 <Button Grid.Column="0" Content="😊" Width="40" Height="40" FontSize="14" Background="Transparent" Foreground="LightGray" Margin="10,0,0,0" BorderThickness="0" />
                                 <Button Grid.Column="1" Content="📎" Width="40" Height="40" FontSize="16" Background="Transparent" Foreground="LightGray" Margin="0" BorderThickness="0" />
                                 <TextBox Grid.Column="2" Background="Transparent" FontSize="14" Foreground="White" BorderThickness="0" Padding="5,0,0,0" VerticalAlignment="Center" Text="{Binding MessageText, Mode=TwoWay}" KeyDown="MessageTextBox_KeyDown" />
-                                <Button Grid.Column="3" Content="🎤" Width="40" Height="40" FontSize="14" Background="Transparent" Foreground="LightGray" Margin="0,0,10,0" BorderThickness="0" Command="{Binding SendMessageCommand}" CommandParameter="{Binding SelectedContact}" />
+                                <Button Grid.Column="3" Content="➤" Width="40" Height="40" FontSize="14" Background="Transparent" Foreground="LightGray" Margin="0,0,10,0" BorderThickness="0" Command="{Binding SendMessageCommand}" CommandParameter="{Binding SelectedContact}" />
                             </Grid>
                         </Border>
                     </Grid>

@@ -47,7 +47,7 @@
             get
             {
                 return new ParametrizedCommand<Contact>(
-                    execute: contact => SendMessage(),
+                    execute: contact => SendMessage(this.MessageText),
                     canExecute: contact => contact != null
                 );
             }
@@ -104,8 +104,8 @@
                             }
                         });
 
-                        this.OnPropertyChanged(nameof(contact));
                         this.MessageReceived?.Invoke(this, EventArgs.Empty);
+                        this.OnPropertyChanged(nameof(contact));
                     }
                 }
             }
@@ -151,10 +151,11 @@
             }
         }
 
-        public async void SendMessage()
+        public async void SendMessage(string text)
         {
             string messageText = this.MessageText;
             this.MessageText = string.Empty;
+            this.OnPropertyChanged(nameof(MessageText));
 
             if (string.IsNullOrWhiteSpace(messageText))
             {
@@ -166,7 +167,7 @@
                 return;
             }
 
-            byte[] messageData = Encoding.UTF8.GetBytes(messageText);
+            byte[] messageData = Encoding.UTF8.GetBytes(text);
             var sendMessageDto = new SendMessageDto(messageData, MessageType.Text, this.SelfId, this.SelectedContact.Id);
 
             var response = await this.httpClient.PostAsJsonAsync("/api/Message/SendMessage", sendMessageDto);

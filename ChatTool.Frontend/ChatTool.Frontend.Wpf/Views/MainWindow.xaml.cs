@@ -31,9 +31,9 @@
 
         private void ScrollChatToBottom(object? sender, EventArgs e)
         {
-            if (MessageListBox.Items.Count > 0)
+            if (this.MessageListBox.Items.Count > 0)
             {
-                MessageListBox.ScrollIntoView(MessageListBox.Items[MessageListBox.Items.Count - 1]);
+                this.MessageListBox.ScrollIntoView(MessageListBox.Items[MessageListBox.Items.Count - 1]);
             }
         }
 
@@ -41,12 +41,10 @@
         {
             if (e.Key == Key.Enter)
             {
-                // Erzwinge Binding-Aktualisierung
                 var textBox = (TextBox)sender;
                 var binding = BindingOperations.GetBindingExpression(textBox, TextBox.TextProperty);
                 binding?.UpdateSource();
-
-                this.viewModel.SendMessage();
+                this.viewModel.SendMessage(textBox.Text);
             }
         }
 
