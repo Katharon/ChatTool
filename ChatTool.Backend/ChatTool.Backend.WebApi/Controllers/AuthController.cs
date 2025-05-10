@@ -53,6 +53,7 @@
             {
                 Email = dto.Email,
                 UserName = dto.UserName,
+                PublicKeyBase64 = dto.PublicKeyBase64,
             };
 
             var result = await this.userManager.CreateAsync(user, dto.Password);

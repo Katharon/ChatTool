@@ -18,6 +18,11 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<ApplicationUser>()
+                .Property(u => u.PublicKeyBase64)
+                .HasColumnType("nvarchar(max)");
+
         }
     }
 }

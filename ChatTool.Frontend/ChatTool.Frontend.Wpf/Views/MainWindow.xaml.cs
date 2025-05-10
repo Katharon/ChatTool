@@ -20,7 +20,7 @@
         private const double wheelFactor = 0.50;
         private readonly MainWindowViewModel viewModel;
 
-        public MainWindow(Guid selfId)
+        public MainWindow(Guid selfId, string privateKey)
         {
             this.InitializeComponent();
             this.viewModel = new MainWindowViewModel();

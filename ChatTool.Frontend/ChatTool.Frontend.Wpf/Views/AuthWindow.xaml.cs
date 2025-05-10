@@ -1,20 +1,15 @@
 ﻿namespace ChatTool.Frontend.Wpf.Views
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.IO;
     using System.Net.Http;
     using System.Net.Http.Json;
+    using System.Security.Cryptography;
     using System.Text;
     using System.Text.Json;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
     using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
 
     /// <summary>
@@ -48,9 +43,13 @@
             var response = await this.httpClient.PostAsync("/api/Auth/login", content);
             if (response.IsSuccessStatusCode)
             {
+                byte[] encrypted = File.ReadAllBytes("private.key.secure");
+                byte[] decrypted = ProtectedData.Unprotect(encrypted, null, DataProtectionScope.CurrentUser);
+                string privateKey = Encoding.UTF8.GetString(decrypted);
+
                 var result = await response.Content.ReadFromJsonAsync<JsonElement>();
                 Guid selfId = result.GetProperty("id").GetGuid();
-                new MainWindow(selfId).Show();
+                new MainWindow(selfId, privateKey).Show();
                 this.Close();
             }
             else
@@ -61,12 +60,17 @@
 
         private async void SignUp_Click(object sender, RoutedEventArgs e)
         {
+            using RSA rsa = RSA.Create(2048);
+            string publicKey = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
+            string privateKey = Convert.ToBase64String(rsa.ExportPkcs8PrivateKey());
+
             // Neues anonymes Objekt
             var user = new
             {
                 email = this.EmailInput.Text,
                 userName = this.UsernameInput.Text,
                 password = this.PasswordInput.Text,
+                publicKeyBase64 = publicKey,
             };
 
             // In JSON umwandeln
@@ -76,6 +80,10 @@
             var response = await this.httpClient.PostAsync("/api/Auth/register", content);
             if (response.IsSuccessStatusCode)
             {
+                byte[] plaintextBytes = Encoding.UTF8.GetBytes(privateKey);
+                byte[] encrypted = ProtectedData.Protect(plaintextBytes, null, DataProtectionScope.CurrentUser);
+
+                File.WriteAllBytes("private.key.secure", encrypted);
                 MessageBox.Show("Registrierung erfolgreich!");
             }
             else
