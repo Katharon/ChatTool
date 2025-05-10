@@ -29,6 +29,7 @@
                 users.Add(new UserDto
                 {
                     UserName = dbUser.UserName ?? throw new NullReferenceException(),
+                    PublicKeyBase64 = dbUser.PublicKeyBase64,
                     Id = dbUser.Id,
                 });
 

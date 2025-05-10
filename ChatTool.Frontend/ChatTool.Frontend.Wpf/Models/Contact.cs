@@ -7,9 +7,10 @@
 
     public class Contact : INotifyPropertyChanged
     {
-        public Contact(Guid id, string userName, string lastMessage, ImageSource profileImage, DateTime lastSeenTimestamp, DateTime lastMessageTimestamp)
+        public Contact(Guid id, string publicKeyBase64, string userName, string lastMessage, ImageSource profileImage, DateTime lastSeenTimestamp, DateTime lastMessageTimestamp)
         {
             this.Id = id;
+            this.PublicKeyBase64 = publicKeyBase64;
             this.UserName = userName;
             this.LastMessage = lastMessage;
             this.ProfileImage = profileImage;
@@ -18,13 +19,14 @@
         }
 
         public Guid Id { get; }
+        public string PublicKeyBase64 { get; }
         public string UserName { get; }
         public string LastMessage
         {
             get => field;
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (value == null)
                 {
                     throw new ArgumentNullException(nameof(value));
                 }

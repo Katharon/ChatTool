@@ -5,9 +5,10 @@
 
     public class ReceiveMessageDto
     {
-        public ReceiveMessageDto(Guid id, byte[] content, MessageType type, Guid sender, Guid receiver, DateTime timestamp)
+        public ReceiveMessageDto(Guid id, string publicKeyBase64, byte[] content, MessageType type, Guid sender, Guid receiver, DateTime timestamp)
         {
             this.Id = id;
+            this.PublicKeyBase64 = publicKeyBase64;
             this.Content = content;
             this.Type = type;
             this.Sender = sender;
@@ -16,6 +17,7 @@
         }
 
         public Guid Id { get; set; }
+        public string PublicKeyBase64 { get; }
         public byte[] Content { get; }
         public MessageType Type { get; }
         public Guid Sender { get; }

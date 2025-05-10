@@ -25,6 +25,7 @@
             this.InitializeComponent();
             this.viewModel = new MainWindowViewModel();
             this.viewModel.SelfId = selfId;
+            this.viewModel.PrivateKey = privateKey;
             this.DataContext = viewModel;
             this.viewModel.MessageReceived += ScrollChatToBottom;
         }

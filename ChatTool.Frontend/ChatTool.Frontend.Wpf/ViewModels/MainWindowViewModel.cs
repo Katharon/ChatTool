@@ -1,12 +1,12 @@
 ﻿namespace ChatTool.Frontend.Wpf.ViewModels
 {
-    using ChatTool.Backend.Application.Users.DTOs;
     using ChatTool.Frontend.Wpf.Models;
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Net.Http;
     using System.Net.Http.Json;
+    using System.Security.Cryptography;
     using System.Text;
     using System.Windows;
     using System.Windows.Input;
@@ -35,6 +35,7 @@
         public event EventHandler? MessageReceived;
 
         public Guid SelfId { get; set; }
+        public string PrivateKey { get; set; }
 
         public string MessageText { get; set; } = string.Empty;
 
@@ -64,14 +65,18 @@
                     foreach (var user in users)
                     {
                         var id = user.Id;
+                        var publicKeyBase64 = user.PublicKeyBase64;
                         var userName = user.UserName;
-                        var lastMessage = user.Id.ToString();
+                        var lastMessage = string.Empty;
                         var profileImage = new BitmapImage(new Uri("pack://application:,,,/ChatTool.Frontend.Wpf;component/Resources/Images/Bubu.png"));
                         var lastSeenTimestamp = DateTime.Now;
                         var lastMessageTimestamp = DateTime.Now;
 
-                        var contact = new Contact(id, userName, lastMessage, profileImage, lastSeenTimestamp, lastMessageTimestamp);
-                        this.Contacts.Add(contact);
+                        if (user.Id != this.SelfId)
+                        {
+                            var contact = new Contact(id, publicKeyBase64, userName, lastMessage, profileImage, lastSeenTimestamp, lastMessageTimestamp);
+                            this.Contacts.Add(contact);
+                        }
                     }
                 }
             }
@@ -95,12 +100,32 @@
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
+                            // PrivateKey importieren
+                            using RSA rsa = RSA.Create();
+                            byte[] privateKeyBytes = Convert.FromBase64String(this.PrivateKey);
+                            rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
+
                             contact.Messages.Clear();
                             foreach (var message in messages)
                             {
-                                contact.Messages.Add(message);
-                                contact.LastMessage = Encoding.UTF8.GetString(contact.Messages[^1].Content);
-                                contact.LastMessageTimestamp = contact.Messages[^1].Timestamp;
+                                // Entschlüsseln
+                                byte[] decryptedBytes = rsa.Decrypt(message.Content, RSAEncryptionPadding.OaepSHA256);
+                                string decryptedText = Encoding.UTF8.GetString(decryptedBytes);
+
+                                // Nachricht ersetzen
+                                var decryptedMessage = new ReceiveMessageDto(
+                                    message.Id,
+                                    contact.PublicKeyBase64,
+                                    decryptedBytes,
+                                    message.Type,
+                                    message.Sender,
+                                    message.Receiver,
+                                    message.Timestamp
+                                );
+
+                                contact.Messages.Add(decryptedMessage);
+                                contact.LastMessage = Encoding.UTF8.GetString(decryptedBytes);
+                                contact.LastMessageTimestamp = message.Timestamp;
                             }
                         });
 
@@ -127,17 +152,42 @@
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                var existingMessages = this.SelectedContact.Messages;
+                                // PrivateKey importieren
+                                using RSA rsa = RSA.Create();
+                                byte[] privateKeyBytes = Convert.FromBase64String(this.PrivateKey);
+                                rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
 
+                                var existingMessages = this.SelectedContact.Messages;
                                 foreach (var message in messages)
                                 {
                                     bool exists = existingMessages.Any(m => m.Id == message.Id);
                                     if (!exists)
                                     {
-                                        existingMessages.Add(message);
-                                        this.SelectedContact.LastMessage = Encoding.UTF8.GetString(message.Content);
+                                        // Entschlüsseln
+                                        byte[] decryptedBytes = rsa.Decrypt(message.Content, RSAEncryptionPadding.OaepSHA256);
+                                        string decryptedText = Encoding.UTF8.GetString(decryptedBytes);
+
+                                        // Nachricht ersetzen
+                                        var decryptedMessage = new ReceiveMessageDto(
+                                            message.Id,
+                                            this.SelectedContact.PublicKeyBase64,
+                                            decryptedBytes,
+                                            message.Type,
+                                            message.Sender,
+                                            message.Receiver,
+                                            message.Timestamp
+                                        );
+
+                                        existingMessages.Add(decryptedMessage);
+                                        this.SelectedContact.LastMessage = Encoding.UTF8.GetString(decryptedBytes);
                                         this.SelectedContact.LastMessageTimestamp = message.Timestamp;
                                         this.MessageReceived?.Invoke(this, EventArgs.Empty);
+
+                                        // OLD WITHOUT RSA
+                                        // existingMessages.Add(message);
+                                        // this.SelectedContact.LastMessage = Encoding.UTF8.GetString(message.Content);
+                                        // this.SelectedContact.LastMessageTimestamp = message.Timestamp;
+                                        // this.MessageReceived?.Invoke(this, EventArgs.Empty);
                                     }
                                 }
                             });
@@ -161,15 +211,18 @@
             {
                 return;
             }
-
             if (this.SelectedContact == null)
             {
                 return;
             }
 
-            byte[] messageData = Encoding.UTF8.GetBytes(text);
-            var sendMessageDto = new SendMessageDto(messageData, MessageType.Text, this.SelfId, this.SelectedContact.Id);
+            byte[] messageBytes = Encoding.UTF8.GetBytes(text);
 
+            using RSA rsa = RSA.Create();
+            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(this.SelectedContact.PublicKeyBase64), out _);
+            byte[] encryptedBytes = rsa.Encrypt(messageBytes, RSAEncryptionPadding.OaepSHA256);
+
+            var sendMessageDto = new SendMessageDto(encryptedBytes, MessageType.Text, this.SelfId, this.SelectedContact.Id);
             var response = await this.httpClient.PostAsJsonAsync("/api/Message/SendMessage", sendMessageDto);
             if (!response.IsSuccessStatusCode)
             {
